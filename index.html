@@ -1,308 +1,165 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Car Delivery Tracker</title>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
-    <style>
-        body, html {
-            margin: 13px;
-            padding: 0;
-            height: 100%;
-            background-color: white;
-            font-family: 'Roboto', sans-serif;
-            color: #333;
-        }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Carvana Cars - Car Approval</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background-color: #f4f4f4;
+      font-family: Arial, sans-serif;
+    }
 
-        .tracker-container {
+    .main-container {
+      max-width: 600px;
+      margin: 0 auto;
+      background: #ffffff;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
 
-            padding: 30px;
-            text-align: center;
-        }
+    .logo {
+      text-align: center;
+      margin-bottom: 10px;
+    }
 
-        .header {
-            margin-bottom: 40px;
-        }
+    .logo img {
+      width: 120px;
+      height: auto;
+    }
 
-        .header h1 {
-            font-size: 2.0rem;
-            color: #3498db;
-        }
+    .company-name {
+      text-align: center;
+      font-size: 24px;
+      font-weight: bold;
+      color: #00aa88;
+      margin-top: 5px;
+    }
 
-        .header p {
-            font-size: 1.2rem;
-            color: #7f8c8d;
-        }
+    .client-name {
+      text-align: center;
+      font-size: 26px;
+      font-weight: bold;
+      font-family: Georgia, serif;
+      color: #333;
+      margin: 15px 0;
+      background: linear-gradient(to right, #00aa88, #006666);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
 
-        .progress-container {
-            position: relative;
-            width: 100%;
-            height: 40px;
-            background-color: white;
-            border-radius: 20px;
-            margin-bottom: 40px;
-        }
+    .address {
+      text-align: center;
+      font-size: 12px;
+      color: #777;
+      margin-bottom: 20px;
+    }
 
-        .progress {
-            height: 100%;
-            background-color: white;
-            border-radius: 20px;
-            width: 0%; /* Initial width */
-            transition: width 1s ease;
-        }
+    .car-image {
+      width: 100%;
+      border-radius: 8px;
+    }
 
-        .car {
-            position: absolute;
-            top: 50%;
-            left: 0;
-            transform: translateY(-50%);
-            width: 100px;
-            height: 52px;
-            background-color: transparent;
-            background-image: url('https://img.icons8.com/ios/452/car.png');
-            background-size: contain;
-            background-repeat: no-repeat;
-            transition: left 1s ease;
-            animation: blink 1s infinite; /* Added blinking effect */
-        }
+    .car-details {
+      margin-top: 20px;
+    }
 
-        @keyframes blink {
-            0% {
-                opacity: 1;
-            }
-            50% {
-                opacity: 0.5;
-            }
-            100% {
-                opacity: 1;
-            }
-        }
+    .car-details h3 {
+      color: #00aa88;
+      margin-bottom: 10px;
+    }
 
-        .timeline {
-            display: flex;
-            justify-content: space-between;
-            position: relative;
-            margin-top: 20px;
-        }
+    .car-details p {
+      margin: 5px 0;
+      color: #333;
+      font-size: 15px;
+    }
 
-        .checkpoint {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            position: absolute;
-            bottom: -50px;
-            width: 100px;
-            padding: 12px;
-            border-radius: 10px;
-            color: white;
-            font-weight: bold;
-            transition: background-color 0.3s ease;
-        }
+    .apply-btn {
+      margin-top: 30px;
+      text-align: center;
+    }
 
-        .checkpoint-1 {
-            background-color: #3498db;
-        }
+    .apply-btn a {
+      background: linear-gradient(to right, #00aa88, #006666);
+      color: #fff;
+      padding: 12px 24px;
+      font-size: 16px;
+      font-weight: bold;
+      text-decoration: none;
+      border-radius: 30px;
+      box-shadow: 0 4px 0 #004d3a;
+      display: inline-block;
+      transition: all 0.3s ease-in-out;
+    }
 
-        .checkpoint-2 {
-            background-color: #2ecc71;
-        }
+    .apply-btn a:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 0 #004d3a;
+    }
 
-        .checkpoint-3 {
-            background-color: #f39c12;
-        }
+    .footer {
+      text-align: center;
+      font-size: 13px;
+      color: #999;
+      margin-top: 40px;
+    }
 
-        .checkpoint-4 {
-            background-color: #e74c3c;
-        }
+    @media (max-width: 600px) {
+      .main-container {
+        padding: 15px;
+      }
 
-        .checkpoint-5 {
-            background-color: #8e44ad;
-        }
+      .client-name {
+        font-size: 22px;
+      }
 
-        .checkpoint-6 {
-            background-color: #1abc9c;
-        }
-
-        .checkpoint:hover {
-            opacity: 0.8;
-        }
-
-        .checkpoint-number {
-            font-size: 1.5rem;
-        }
-
-        .checkpoint-name {
-            font-size: 0.9rem;
-        }
-
-        .timer {
-            font-size: 1.5rem;
-            font-weight: bold;
-            color: #3498db;
-            margin-top: 100px;
-        }
-
-        @media (max-width: 768px) {
-            .tracker-container {
-                padding: 20px;
-            }
-
-            .progress-container {
-                height: 30px;
-            }
-
-            .car {
-                width: 30px;
-                height: 20px;
-            }
-
-            .checkpoint {
-                width: 40px;
-                padding: 10px;
-                font-size: 0.8rem;
-            }
-            .checkpoint-name {
-                font-size: 0.5rem;
-           }
-
-            .checkpoint-number {
-                font-size: 1.0rem;
-            }
-        .car {
-            position: absolute;
-            top: 50%;
-            left: 0;
-            transform: translateY(-50%);
-            width: 80px;
-            height: 42px;
-            background-color: transparent;
-            background-image: url('https://img.icons8.com/ios/452/car.png');
-            background-size: contain;
-            background-repeat: no-repeat;
-            transition: left 1s ease;
-            animation: blink 1s infinite; /* Added blinking effect */
-        }
-        }
-    </style>
+      .apply-btn a {
+        padding: 10px 20px;
+        font-size: 15px;
+      }
+    }
+  </style>
 </head>
 <body>
-    <div class="tracker-container">
-        <div class="header">
-            <h1>Car Delivery Tracker</h1>
-            <p>Your car is on its way! Check the progress below.</p>
-        </div>
+  <div class="main-container">
+    <div class="logo">
+      <!-- Carvana Cars Logo -->
+      <img src="https://di-uploads-pod20.dealerinspire.com/premierchevroletofcarlsbad/uploads/2024/07/carvana-logo.jpg" alt="Carvana Cars Logo" />
+    </div>
+    <div class="company-name">Carvana Cars</div>
+    <div class="client-name">Approved for Mr. John</div>
+    <div class="address">Carvana Cars Showroom, 2478 E Louisiana Ave, Tampa, FL 33610</div>
 
-        <!-- Progress Bar and Car Movement -->
-        <div class="progress-container">
-            <div class="progress" id="progress"></div>
-            <div class="car" id="car"></div>
-        </div>
+    <!-- Replace with relevant car image -->
+   
+    <img src="https://helios-i.mashable.com/imagery/articles/01jrQmrHjDUKNffkF2QEXNe/images-1.fill.size_2000x964.v1683028833.png" alt="Approved Car" class="car-image" />
 
-        <!-- Timeline with Checkpoints -->
-        <div class="timeline">
-            <div class="checkpoint checkpoint-1" style="left: 0%;" id="showroom">
-                <div class="checkpoint-number">1</div>
-                <div class="checkpoint-name">Showroom</div>
-            </div>
-            <div class="checkpoint checkpoint-2" style="left: 20%;" id="terminal1">
-                <div class="checkpoint-number">2</div>
-                <div class="checkpoint-name">Terminal 1</div>
-            </div>
-            <div class="checkpoint checkpoint-3" style="left: 40%;" id="terminal2">
-                <div class="checkpoint-number">3</div>
-                <div class="checkpoint-name">Terminal 2</div>
-            </div>
-            <div class="checkpoint checkpoint-4" style="left: 60%;" id="terminal3">
-                <div class="checkpoint-number">4</div>
-                <div class="checkpoint-name">Terminal 3</div>
-            </div>
-            <div class="checkpoint checkpoint-5" style="left: 80%;" id="terminal4">
-                <div class="checkpoint-number">5</div>
-                <div class="checkpoint-name">Terminal 4</div>
-            </div>
-            <div class="checkpoint checkpoint-6" style="left: 100%;" id="clientAddress">
-                <div class="checkpoint-number">6</div>
-                <div class="checkpoint-name">Client Address</div>
-            </div>
-        </div>
 
-        <!-- Timer Display -->
-        <div class="timer" id="countdown">
-            Time to Next Terminal: <span id="timeRemaining">Calculating...</span>
-        </div>
+    <div class="car-details">
+      <h3>Car Specifications</h3>
+      <p><strong>Make:</strong> Mercedes-Benz</p>
+      <p><strong>Model:</strong> C300 AMG</p>
+      <p><strong>Year:</strong> 2022</p>
+      <p><strong>Color:</strong> Jet Black</p>
+      <p><strong>Engine:</strong> 2.0L Turbocharged Inline-4</p>
+      <p><strong>Transmission:</strong> 9-speed Automatic</p>
+      <p><strong>Interior:</strong> Leather Seats, Ambient Lighting</p>
     </div>
 
-    <script>
-        const progressBar = document.getElementById('progress');
-        const timeRemaining = document.getElementById('timeRemaining');
-        const checkpoints = document.querySelectorAll('.checkpoint');
-        const carElement = document.getElementById('car');
-        const countdownElement = document.getElementById('countdown');
+    <!-- Updated Payment Status message -->
+    <p><strong>Payment Status:</strong> Please complete the down payment to initiate the delivery process. Thank you for choosing Carvana Cars!</p>
 
-        // Define delivery stages (with 7 hours between each)
-        const stages = [
-            { name: 'Showroom', time: 0 },
-            { name: 'Terminal 1', time: 7 * 60 * 60 * 1000 },
-            { name: 'Terminal 2', time: 14 * 60 * 60 * 1000 },
-            { name: 'Terminal 3', time: 21 * 60 * 60 * 1000 },
-            { name: 'Terminal 4', time: 28 * 60 * 60 * 1000 },
-            { name: 'Client Address', time: 35 * 60 * 60 * 1000 },
-        ];
+    <div class="apply-btn">
+      <a href="tracker.html">View Tracker</a>
+    </div>
 
-        let currentStage = 0;
-
-        // Set the start time in localStorage if it's not set already
-        if (!localStorage.getItem('startTime')) {
-            localStorage.setItem('startTime', Date.now());
-        }
-
-        const startTime = parseInt(localStorage.getItem('startTime'));
-
-        function calculateTimeLeft() {
-            const elapsedTime = Date.now() - startTime;
-            let targetTime = stages[currentStage].time;
-            let timeLeft = targetTime - elapsedTime;
-
-            if (timeLeft <= 0 && currentStage < stages.length - 1) {
-                currentStage++;
-                timeLeft = stages[currentStage].time - elapsedTime;
-            }
-
-            return timeLeft;
-        }
-
-        function startCountdown() {
-            setInterval(function () {
-                const timeLeft = calculateTimeLeft();
-
-                const hours = Math.floor(timeLeft / (1000 * 60 * 60));
-                const minutes = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
-                const seconds = Math.floor((timeLeft % (1000 * 60)) / 1000);
-
-                timeRemaining.textContent = `${hours}:${minutes < 10 ? '0' + minutes : minutes}:${seconds < 10 ? '0' + seconds : seconds}`;
-
-                if (timeLeft <= 0 && currentStage < stages.length - 1) {
-                    updateProgressBar();
-                    moveCar();
-                }
-            }, 1000);
-        }
-
-        function updateProgressBar() {
-            const progressWidth = (currentStage / (stages.length - 1)) * 100;
-            progressBar.style.width = `${progressWidth}%`;
-        }
-
-        function moveCar() {
-            const progressWidth = (currentStage / (stages.length - 1)) * 100;
-            const carPosition = (progressWidth / 100) * (document.querySelector('.progress-container').offsetWidth - carElement.offsetWidth);
-            carElement.style.left = `${carPosition}px`;
-        }
-
-        // Initialize tracker
-        startCountdown();
-        updateProgressBar();
-    </script>
+    <div class="footer">
+      &copy; 2025 Carvana Cars. All rights reserved.
+    </div>
+  </div>
 </body>
 </html>
