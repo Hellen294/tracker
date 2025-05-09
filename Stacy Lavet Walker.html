@@ -25,7 +25,7 @@
         }
 
         .header h1 {
-            font-size: 2.0rem;
+            font-size: 2rem;
             color: #3498db;
         }
 
@@ -47,7 +47,7 @@
             height: 100%;
             background-color: white;
             border-radius: 20px;
-            width: 0%; /* Initial width */
+            width: 0%;
             transition: width 1s ease;
         }
 
@@ -63,22 +63,12 @@
             background-size: contain;
             background-repeat: no-repeat;
             transition: left 1s ease;
-            animation: pulse 1.5s infinite; /* Pulse effect */
+            animation: blink 1s infinite;
         }
 
-        @keyframes pulse {
-            0% {
-                transform: translateY(-50%) scale(1);
-                opacity: 1;
-            }
-            50% {
-                transform: translateY(-50%) scale(1.1);
-                opacity: 0.7;
-            }
-            100% {
-                transform: translateY(-50%) scale(1);
-                opacity: 1;
-            }
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
         }
 
         .timeline {
@@ -102,24 +92,17 @@
             transition: background-color 0.3s ease;
         }
 
-        .checkpoint-1 { background-color: #3498db; }
-        .checkpoint-2 { background-color: #2ecc71; }
-        .checkpoint-3 { background-color: #f39c12; }
-        .checkpoint-4 { background-color: #e74c3c; }
-        .checkpoint-5 { background-color: #8e44ad; }
-        .checkpoint-6 { background-color: #1abc9c; }
+        .checkpoint-1 { background-color: #3498db; left: 0%; }
+        .checkpoint-2 { background-color: #2ecc71; left: 20%; }
+        .checkpoint-3 { background-color: #f39c12; left: 40%; }
+        .checkpoint-4 { background-color: #e74c3c; left: 60%; }
+        .checkpoint-5 { background-color: #8e44ad; left: 80%; }
+        .checkpoint-6 { background-color: #1abc9c; left: 100%; }
 
-        .checkpoint:hover {
-            opacity: 0.8;
-        }
+        .checkpoint:hover { opacity: 0.8; }
 
-        .checkpoint-number {
-            font-size: 1.5rem;
-        }
-
-        .checkpoint-name {
-            font-size: 0.9rem;
-        }
+        .checkpoint-number { font-size: 1.5rem; }
+        .checkpoint-name { font-size: 0.9rem; }
 
         .timer {
             font-size: 1.5rem;
@@ -128,33 +111,31 @@
             margin-top: 100px;
         }
 
+        #startButton {
+            margin-top: 30px;
+            padding: 10px 20px;
+            font-size: 1rem;
+            background-color: #3498db;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+
         @media (max-width: 768px) {
-            .tracker-container {
-                padding: 20px;
-            }
-
-            .progress-container {
-                height: 30px;
-            }
-
+            .tracker-container { padding: 20px; }
+            .progress-container { height: 30px; }
             .car {
                 width: 80px;
                 height: 42px;
             }
-
             .checkpoint {
                 width: 40px;
                 padding: 10px;
                 font-size: 0.8rem;
             }
-
-            .checkpoint-name {
-                font-size: 0.5rem;
-            }
-
-            .checkpoint-number {
-                font-size: 1.0rem;
-            }
+            .checkpoint-name { font-size: 0.5rem; }
+            .checkpoint-number { font-size: 1rem; }
         }
     </style>
 </head>
@@ -165,50 +146,50 @@
             <p>Your car is on its way! Check the progress below.</p>
         </div>
 
-        <!-- Progress Bar and Car Movement -->
         <div class="progress-container">
             <div class="progress" id="progress"></div>
             <div class="car" id="car"></div>
         </div>
 
-        <!-- Timeline with Checkpoints -->
         <div class="timeline">
-            <div class="checkpoint checkpoint-1" style="left: 0%;" id="showroom">
+            <div class="checkpoint checkpoint-1" id="showroom">
                 <div class="checkpoint-number">1</div>
                 <div class="checkpoint-name">Showroom</div>
             </div>
-            <div class="checkpoint checkpoint-2" style="left: 20%;" id="terminal1">
+            <div class="checkpoint checkpoint-2" id="terminal1">
                 <div class="checkpoint-number">2</div>
                 <div class="checkpoint-name">Terminal 1</div>
             </div>
-            <div class="checkpoint checkpoint-3" style="left: 40%;" id="terminal2">
+            <div class="checkpoint checkpoint-3" id="terminal2">
                 <div class="checkpoint-number">3</div>
                 <div class="checkpoint-name">Terminal 2</div>
             </div>
-            <div class="checkpoint checkpoint-4" style="left: 60%;" id="terminal3">
+            <div class="checkpoint checkpoint-4" id="terminal3">
                 <div class="checkpoint-number">4</div>
                 <div class="checkpoint-name">Terminal 3</div>
             </div>
-            <div class="checkpoint checkpoint-5" style="left: 80%;" id="terminal4">
+            <div class="checkpoint checkpoint-5" id="terminal4">
                 <div class="checkpoint-number">5</div>
                 <div class="checkpoint-name">Terminal 4</div>
             </div>
-            <div class="checkpoint checkpoint-6" style="left: 100%;" id="clientAddress">
+            <div class="checkpoint checkpoint-6" id="clientAddress">
                 <div class="checkpoint-number">6</div>
                 <div class="checkpoint-name">Client Address</div>
             </div>
         </div>
 
-        <!-- Timer Display -->
         <div class="timer" id="countdown">
-            Time to Next Terminal: <span id="timeRemaining">Calculating...</span>
+            Time to Next Terminal: <span id="timeRemaining">Waiting to start...</span>
         </div>
+
+        <button id="startButton">Start Tracking</button>
     </div>
 
     <script>
         const progressBar = document.getElementById('progress');
         const timeRemaining = document.getElementById('timeRemaining');
         const carElement = document.getElementById('car');
+        const startBtn = document.getElementById('startButton');
 
         const stages = [
             { name: 'Showroom', time: 0 },
@@ -220,12 +201,14 @@
         ];
 
         let currentStage = 0;
+        let startTime = null;
+        let intervalId = null;
 
-        if (!localStorage.getItem('startTime')) {
-            localStorage.setItem('startTime', Date.now());
-        }
-
-        const startTime = parseInt(localStorage.getItem('startTime'));
+        startBtn.addEventListener('click', () => {
+            startTime = Date.now();
+            localStorage.setItem('startTime', startTime);
+            startCountdown();
+        });
 
         function calculateTimeLeft() {
             const elapsedTime = Date.now() - startTime;
@@ -241,19 +224,20 @@
         }
 
         function startCountdown() {
-            setInterval(function () {
+            clearInterval(intervalId);
+            intervalId = setInterval(function () {
                 const timeLeft = calculateTimeLeft();
+
+                if (timeLeft <= 0 && currentStage < stages.length - 1) {
+                    updateProgressBar();
+                    moveCar();
+                }
 
                 const hours = Math.floor(timeLeft / (1000 * 60 * 60));
                 const minutes = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
                 const seconds = Math.floor((timeLeft % (1000 * 60)) / 1000);
 
                 timeRemaining.textContent = `${hours}:${minutes < 10 ? '0' + minutes : minutes}:${seconds < 10 ? '0' + seconds : seconds}`;
-
-                if (timeLeft <= 0 && currentStage < stages.length - 1) {
-                    updateProgressBar();
-                    moveCar();
-                }
             }, 1000);
         }
 
@@ -264,12 +248,11 @@
 
         function moveCar() {
             const progressWidth = (currentStage / (stages.length - 1)) * 100;
-            const carPosition = (progressWidth / 100) * (document.querySelector('.progress-container').offsetWidth - carElement.offsetWidth);
+            const containerWidth = document.querySelector('.progress-container').offsetWidth;
+            const carWidth = carElement.offsetWidth;
+            const carPosition = (progressWidth / 100) * (containerWidth - carWidth);
             carElement.style.left = `${carPosition}px`;
         }
-
-        startCountdown();
-        updateProgressBar();
     </script>
 </body>
 </html>
